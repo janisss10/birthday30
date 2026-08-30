@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
+import { authenticateToken } from "./middleware/authMiddleware";
 
 dotenv.config();
 
@@ -32,8 +34,25 @@ app.post("/api/auth/login", (req, res) => {
     });
   }
 
+  const token = jwt.sign(
+    {
+      authenticated: true,
+    },
+    process.env.JWT_SECRET as string,
+    {
+      expiresIn: "7d",
+    },
+  );
+
   return res.json({
     message: "Login successful",
+    token,
+  });
+});
+
+app.get("/api/auth/me", authenticateToken, (_req, res) => {
+  res.json({
+    authenticated: true,
   });
 });
 
