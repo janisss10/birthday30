@@ -1,23 +1,23 @@
 import { Button, Stack, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { logout } from "../utils/auth";
 
 const Home = () => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
-
   return (
     <Stack spacing={3}>
-      <Typography variant="h2">BIRTHDAY 30</Typography>
+      <Typography variant="overline">BIRTHDAY30</Typography>
 
-      <Typography>Welcome to your birthday adventure 🎂</Typography>
+      <Typography variant="h1">30</Typography>
 
-      <Button variant="outlined" onClick={handleLogout}>
-        LOG OUT
+      <Typography variant="h5">Your birthday adventure awaits.</Typography>
+
+      <Button
+        variant="contained"
+        size="large"
+        onClick={() => navigate("/missions")}
+      >
+        View Missions
       </Button>
     </Stack>
   );
