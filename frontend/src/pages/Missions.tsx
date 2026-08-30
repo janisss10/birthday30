@@ -1,15 +1,38 @@
+import { useEffect, useState } from "react";
 import { Card, CardContent, Chip, Stack, Typography } from "@mui/material";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import LockOpenOutlinedIcon from "@mui/icons-material/LockOpenOutlined";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import { missions } from "../data/missions";
 import { useNavigate } from "react-router-dom";
+
+import type { Mission } from "../types/birthday";
+import { getMissions } from "../services/missions";
 
 const Missions = () => {
   const navigate = useNavigate();
 
+  const [missions, setMissions] = useState<Mission[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    const loadMissions = async () => {
+      try {
+        const data = await getMissions();
+
+        setMissions(data);
+      } catch {
+        setError("Unable to load missions.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadMissions();
+  }, []);
+
   return (
-    <Stack spacing={3}>
+    <Stack spacing={4}>
       <Stack spacing={1}>
         <Typography variant="overline">BIRTHDAY30</Typography>
 
@@ -20,8 +43,15 @@ const Missions = () => {
         </Typography>
       </Stack>
 
-      <Stack spacing={2}>
-        {missions.map((mission) => (
+      {loading && (
+        <Typography color="text.secondary">Loading missions...</Typography>
+      )}
+
+      {error && <Typography color="error">{error}</Typography>}
+
+      {!loading &&
+        !error &&
+        missions.map((mission) => (
           <Card
             key={mission.id}
             onClick={() => {
@@ -68,7 +98,6 @@ const Missions = () => {
             </CardContent>
           </Card>
         ))}
-      </Stack>
     </Stack>
   );
 };

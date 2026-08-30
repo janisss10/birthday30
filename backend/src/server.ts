@@ -3,11 +3,14 @@ import cors from "cors";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { authenticateToken } from "./middleware/authMiddleware";
+import { missions } from "./data/missions";
 
 dotenv.config();
 
 const app = express();
 const PORT = 3000;
+
+let completedMissions: string[] = [];
 
 app.use(cors());
 app.use(express.json());
@@ -53,6 +56,73 @@ app.post("/api/auth/login", (req, res) => {
 app.get("/api/auth/me", authenticateToken, (_req, res) => {
   res.json({
     authenticated: true,
+  });
+});
+
+app.get("/api/missions", authenticateToken, (_req, res) => {
+  const missionProgress = missions.map((mission, index) => {
+    const completed = completedMissions.includes(mission.id);
+
+    const previousMissionCompleted =
+      index === 0 || completedMissions.includes(missions[index - 1].id);
+
+    return {
+      id: mission.id,
+      number: mission.number,
+      title: mission.title,
+      description: mission.description,
+      status: completed
+        ? "completed"
+        : previousMissionCompleted
+          ? "available"
+          : "locked",
+    };
+  });
+
+  return res.json(missionProgress);
+});
+
+app.post("/api/missions/:missionId/unlock", authenticateToken, (req, res) => {
+  const missionId = req.params.missionId as string;
+  const { code } = req.body;
+
+  const mission = missions.find((item) => item.id === missionId);
+
+  if (!mission) {
+    return res.status(404).json({
+      message: "Mission not found",
+    });
+  }
+
+  const missionIndex = missions.findIndex((item) => item.id === missionId);
+
+  const previousMissionCompleted =
+    missionIndex === 0 ||
+    completedMissions.includes(missions[missionIndex - 1].id);
+
+  if (!previousMissionCompleted) {
+    return res.status(403).json({
+      message: "This mission is still locked",
+    });
+  }
+
+  if (completedMissions.includes(missionId)) {
+    return res.json({
+      message: "Mission already completed",
+    });
+  }
+
+  if (code !== mission.code) {
+    return res.status(401).json({
+      message: "Incorrect mission code",
+    });
+  }
+
+  completedMissions.push(missionId);
+
+  return res.json({
+    message: "Mission completed",
+    missionId,
   });
 });
 
