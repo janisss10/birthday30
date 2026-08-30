@@ -32,7 +32,7 @@ app.post("/api/auth/login", (req, res) => {
 
   if (pin !== process.env.PIN) {
     return res.status(401).json({
-      message: "Incorrect PIN",
+      message: "nice try, but nope",
     });
   }
 
