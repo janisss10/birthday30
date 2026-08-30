@@ -4,13 +4,12 @@ import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { authenticateToken } from "./middleware/authMiddleware";
 import { missions } from "./data/missions";
+import { getProgress, saveProgress } from "./services/progress";
 
 dotenv.config();
 
 const app = express();
 const PORT = 3000;
-
-let completedMissions: string[] = [];
 
 app.use(cors());
 app.use(express.json());
@@ -60,11 +59,14 @@ app.get("/api/auth/me", authenticateToken, (_req, res) => {
 });
 
 app.get("/api/missions", authenticateToken, (_req, res) => {
+  const progress = getProgress();
+
   const missionProgress = missions.map((mission, index) => {
-    const completed = completedMissions.includes(mission.id);
+    const completed = progress.completedMissions.includes(mission.id);
 
     const previousMissionCompleted =
-      index === 0 || completedMissions.includes(missions[index - 1].id);
+      index === 0 ||
+      progress.completedMissions.includes(missions[index - 1].id);
 
     return {
       id: mission.id,
@@ -96,9 +98,11 @@ app.post("/api/missions/:missionId/unlock", authenticateToken, (req, res) => {
 
   const missionIndex = missions.findIndex((item) => item.id === missionId);
 
+  const progress = getProgress();
+
   const previousMissionCompleted =
     missionIndex === 0 ||
-    completedMissions.includes(missions[missionIndex - 1].id);
+    progress.completedMissions.includes(missions[missionIndex - 1].id);
 
   if (!previousMissionCompleted) {
     return res.status(403).json({
@@ -106,7 +110,7 @@ app.post("/api/missions/:missionId/unlock", authenticateToken, (req, res) => {
     });
   }
 
-  if (completedMissions.includes(missionId)) {
+  if (progress.completedMissions.includes(missionId)) {
     return res.json({
       message: "Mission already completed",
     });
@@ -118,7 +122,9 @@ app.post("/api/missions/:missionId/unlock", authenticateToken, (req, res) => {
     });
   }
 
-  completedMissions.push(missionId);
+  progress.completedMissions.push(missionId);
+
+  saveProgress(progress);
 
   return res.json({
     message: "Mission completed",
