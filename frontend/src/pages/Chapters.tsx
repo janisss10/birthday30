@@ -1,12 +1,10 @@
 import { useEffect, useState } from "react";
 import { Box, Divider, Stack, Typography } from "@mui/material";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
-import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import { motion } from "motion/react";
 import { useNavigate } from "react-router-dom";
-import CheckCircleIcon from "@mui/icons-material/CheckCircle";
 import type { Chapter } from "../types/birthday";
 import { getChapters } from "../services/chapters";
+import ChapterList from "../components/chapters/ChapterList";
 
 const MotionStack = motion.create(Stack);
 const MotionBox = motion.create(Box);
@@ -76,11 +74,16 @@ const Chapters = () => {
             {/* Announcement */}
             <motion.div
               variants={{
-                hidden: { opacity: 0, y: 12 },
+                hidden: {
+                  opacity: 0,
+                  y: 12,
+                },
                 visible: {
                   opacity: 1,
                   y: 0,
-                  transition: { duration: 0.6 },
+                  transition: {
+                    duration: 0.6,
+                  },
                 },
               }}
             >
@@ -100,7 +103,10 @@ const Chapters = () => {
             {/* Heading */}
             <motion.div
               variants={{
-                hidden: { opacity: 0, y: 25 },
+                hidden: {
+                  opacity: 0,
+                  y: 25,
+                },
                 visible: {
                   opacity: 1,
                   y: 0,
@@ -130,7 +136,10 @@ const Chapters = () => {
             {/* Supporting text */}
             <motion.div
               variants={{
-                hidden: { opacity: 0, y: 12 },
+                hidden: {
+                  opacity: 0,
+                  y: 12,
+                },
                 visible: {
                   opacity: 1,
                   y: 0,
@@ -158,8 +167,14 @@ const Chapters = () => {
 
           {/* Divider */}
           <MotionBox
-            initial={{ opacity: 0, scaleX: 0 }}
-            animate={{ opacity: 1, scaleX: 1 }}
+            initial={{
+              opacity: 0,
+              scaleX: 0,
+            }}
+            animate={{
+              opacity: 1,
+              scaleX: 1,
+            }}
             transition={{
               delay: 0.9,
               duration: 0.7,
@@ -180,8 +195,14 @@ const Chapters = () => {
           {/* Section heading */}
           <MotionStack
             spacing={1}
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
+            initial={{
+              opacity: 0,
+              y: 15,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
             transition={{
               delay: 0.8,
               duration: 0.6,
@@ -208,226 +229,13 @@ const Chapters = () => {
             </Typography>
           </MotionStack>
 
-          {/* Chapters */}
-          <MotionStack
-            spacing={0}
-            initial="hidden"
-            animate="visible"
-            variants={{
-              hidden: {},
-              visible: {
-                transition: {
-                  delayChildren: 1.15,
-                  staggerChildren: 0.12,
-                },
-              },
-            }}
-          >
-            {loading && (
-              <motion.div
-                variants={{
-                  hidden: { opacity: 0, y: 10 },
-                  visible: { opacity: 1, y: 0 },
-                }}
-              >
-                <Typography
-                  sx={{
-                    py: 4,
-                    textAlign: "center",
-                    color: "#888",
-                    fontSize: "0.9rem",
-                  }}
-                >
-                  Preparing your itinerary...
-                </Typography>
-              </motion.div>
-            )}
-
-            {error && (
-              <motion.div
-                variants={{
-                  hidden: { opacity: 0 },
-                  visible: { opacity: 1 },
-                }}
-              >
-                <Typography
-                  sx={{
-                    py: 4,
-                    textAlign: "center",
-                    color: "#A33",
-                    fontSize: "0.9rem",
-                  }}
-                >
-                  {error}
-                </Typography>
-              </motion.div>
-            )}
-
-            {!loading &&
-              !error &&
-              chapters.map((chapter, index) => {
-                const isLocked = chapter.status === "locked";
-                const isCompleted = chapter.status === "completed";
-                const isAvailable = chapter.status === "available";
-
-                return (
-                  <motion.div
-                    key={chapter.id}
-                    variants={{
-                      hidden: {
-                        opacity: 0,
-                        y: 20,
-                      },
-                      visible: {
-                        opacity: 1,
-                        y: 0,
-                        transition: {
-                          duration: 0.55,
-                          ease: "easeOut",
-                        },
-                      },
-                    }}
-                  >
-                    <Box
-                      onClick={() => {
-                        if (!isLocked) {
-                          navigate(`/chapters/${chapter.id}`);
-                        }
-                      }}
-                      sx={{
-                        position: "relative",
-                        py: 3,
-                        px: 1,
-                        borderTop: index === 0 ? "1px solid #D8D5CF" : "none",
-                        borderBottom: "1px solid #D8D5CF",
-                        cursor: isLocked ? "default" : "pointer",
-                        transition:
-                          "background-color 180ms ease, padding 180ms ease",
-
-                        "&:hover": !isLocked
-                          ? {
-                              backgroundColor: "#ECE9E2",
-                              px: 2,
-                            }
-                          : {},
-                      }}
-                    >
-                      <Stack direction="row" spacing={2.5}>
-                        {/* chapter number */}
-                        <Typography
-                          sx={{
-                            minWidth: 48,
-                            fontSize: "0.72rem",
-                            fontWeight: 700,
-                            letterSpacing: "0.08em",
-                            color: isLocked ? "#B5B2AC" : "#777",
-                          }}
-                        >
-                          {String(chapter.number).padStart(2, "0")}
-                        </Typography>
-
-                        {/* chapter content */}
-                        <Stack
-                          spacing={0.6}
-                          sx={{
-                            flex: 1,
-                            minWidth: 0,
-                          }}
-                        >
-                          <Stack direction="row" spacing={1}>
-                            <Typography
-                              sx={{
-                                fontSize: "0.62rem",
-                                fontWeight: 700,
-                                letterSpacing: "0.12em",
-                                textTransform: "uppercase",
-                                color: isLocked ? "#B5B2AC" : "#888",
-                              }}
-                            >
-                              chapter
-                            </Typography>
-
-                            {isCompleted && (
-                              <CheckCircleIcon
-                                sx={{
-                                  fontSize: "0.95rem",
-                                  color: "#777",
-                                }}
-                              />
-                            )}
-                          </Stack>
-
-                          <Typography
-                            sx={{
-                              fontSize: "1.15rem",
-                              fontWeight: 700,
-                              letterSpacing: "-0.02em",
-                              color: isLocked ? "#AAA7A1" : "#171717",
-                            }}
-                          >
-                            {chapter.title}
-                          </Typography>
-
-                          <Typography
-                            sx={{
-                              fontSize: "0.82rem",
-                              lineHeight: 1.6,
-                              color: isLocked ? "#B5B2AC" : "#777",
-                            }}
-                          >
-                            {isLocked
-                              ? "Complete the previous chapter to unlock this."
-                              : chapter.description}
-                          </Typography>
-                        </Stack>
-
-                        {/* Status */}
-                        <Box
-                          sx={{
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            minWidth: 28,
-                          }}
-                        >
-                          {isLocked && (
-                            <LockOutlinedIcon
-                              sx={{
-                                fontSize: "1rem",
-                                color: "#AAA7A1",
-                              }}
-                            />
-                          )}
-
-                          {isCompleted && (
-                            <Typography
-                              sx={{
-                                fontSize: "0.6rem",
-                                fontWeight: 700,
-                                letterSpacing: "0.08em",
-                                textTransform: "uppercase",
-                                color: "#777",
-                              }}
-                            >
-                              DONE
-                            </Typography>
-                          )}
-
-                          {isAvailable && (
-                            <ArrowForwardIcon
-                              sx={{
-                                fontSize: "1.15rem",
-                                color: "#171717",
-                              }}
-                            />
-                          )}
-                        </Box>
-                      </Stack>
-                    </Box>
-                  </motion.div>
-                );
-              })}
-          </MotionStack>
+          {/* Chapter list */}
+          <ChapterList
+            chapters={chapters}
+            loading={loading}
+            error={error}
+            onChapterClick={(chapterId) => navigate(`/chapters/${chapterId}`)}
+          />
         </Stack>
       </Box>
     </Box>

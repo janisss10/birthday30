@@ -69,6 +69,13 @@ const ChapterDetails = () => {
 
       if (updatedChapter) {
         setChapter(updatedChapter);
+
+        requestAnimationFrame(() => {
+          window.scrollTo({
+            top: 0,
+            behavior: "instant",
+          });
+        });
       }
     } catch (err) {
       setError(
@@ -415,7 +422,7 @@ const ChapterDetails = () => {
                   <TextField
                     value={code}
                     onChange={(event) => {
-                      setCode(event.target.value);
+                      setCode(event.target.value.replace(/\D/g, ""));
                       setError("");
                     }}
                     placeholder="Secret code"
@@ -427,6 +434,9 @@ const ChapterDetails = () => {
                         sx: {
                           borderRadius: 2,
                         },
+                      },
+                      htmlInput: {
+                        inputMode: "numeric",
                       },
                     }}
                   />
