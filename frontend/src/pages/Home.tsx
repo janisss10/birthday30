@@ -326,11 +326,11 @@ const Home = () => {
               variant="contained"
               size="large"
               endIcon={<ArrowForwardIcon />}
-              onClick={() => navigate("/missions")}
+              onClick={() => navigate("/chapters")}
               sx={{
                 backgroundColor: "#171717",
                 color: "#fff",
-                borderRadius: 0,
+                borderRadius: 2,
                 px: 4,
                 py: 1.7,
                 fontSize: "0.7rem",

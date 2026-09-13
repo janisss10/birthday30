@@ -4,9 +4,9 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import { verifySession } from "./utils/auth";
 import MainLayout from "./components/layout/MainLayout";
-import Missions from "./pages/Missions";
+import Chapters from "./pages/Chapters";
 import Memories from "./pages/Memories";
-import MissionDetails from "./pages/MissionDetails";
+import ChapterDetails from "./pages/ChapterDetails";
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const [status, setStatus] = useState<
@@ -51,15 +51,15 @@ function App() {
       </Route>
 
       <Route
-        path="/missions"
+        path="/chapters"
         element={
           <ProtectedRoute>
             <MainLayout />
           </ProtectedRoute>
         }
       >
-        <Route index element={<Missions />} />
-        <Route path=":missionId" element={<MissionDetails />} />
+        <Route index element={<Chapters />} />
+        <Route path=":chapterId" element={<ChapterDetails />} />
       </Route>
 
       <Route

@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import { authenticateToken } from "./middleware/authMiddleware";
-import { missions } from "./data/missions";
+import { chapters } from "./data/chapters";
 import { getProgress, saveProgress } from "./services/progress";
 
 dotenv.config();
@@ -58,77 +58,79 @@ app.get("/api/auth/me", authenticateToken, (_req, res) => {
   });
 });
 
-app.get("/api/missions", authenticateToken, (_req, res) => {
+app.get("/api/chapters", authenticateToken, (_req, res) => {
   const progress = getProgress();
 
-  const missionProgress = missions.map((mission, index) => {
-    const completed = progress.completedMissions.includes(mission.id);
+  const chapterProgress = chapters.map((chapter, index) => {
+    const completed = progress.completedChapters.includes(chapter.id);
 
-    const previousMissionCompleted =
+    const previousChapterCompleted =
       index === 0 ||
-      progress.completedMissions.includes(missions[index - 1].id);
+      progress.completedChapters.includes(chapters[index - 1].id);
 
     return {
-      id: mission.id,
-      number: mission.number,
-      title: mission.title,
-      description: mission.description,
+      id: chapter.id,
+      number: chapter.number,
+      title: chapter.title,
+      description: chapter.description,
+      nextLocation: chapter.nextLocation,
+      nextLocationDetails: chapter.nextLocationDetails,
       status: completed
         ? "completed"
-        : previousMissionCompleted
+        : previousChapterCompleted
           ? "available"
           : "locked",
     };
   });
 
-  return res.json(missionProgress);
+  return res.json(chapterProgress);
 });
 
-app.post("/api/missions/:missionId/unlock", authenticateToken, (req, res) => {
-  const missionId = req.params.missionId as string;
+app.post("/api/chapters/:chapterId/unlock", authenticateToken, (req, res) => {
+  const chapterId = req.params.chapterId as string;
   const { code } = req.body;
 
-  const mission = missions.find((item) => item.id === missionId);
+  const chapter = chapters.find((item) => item.id === chapterId);
 
-  if (!mission) {
+  if (!chapter) {
     return res.status(404).json({
-      message: "Mission not found",
+      message: "chapter not found",
     });
   }
 
-  const missionIndex = missions.findIndex((item) => item.id === missionId);
+  const chapterIndex = chapters.findIndex((item) => item.id === chapterId);
 
   const progress = getProgress();
 
-  const previousMissionCompleted =
-    missionIndex === 0 ||
-    progress.completedMissions.includes(missions[missionIndex - 1].id);
+  const previousChapterCompleted =
+    chapterIndex === 0 ||
+    progress.completedChapters.includes(chapters[chapterIndex - 1].id);
 
-  if (!previousMissionCompleted) {
+  if (!previousChapterCompleted) {
     return res.status(403).json({
-      message: "This mission is still locked",
+      message: "This chapter is still locked",
     });
   }
 
-  if (progress.completedMissions.includes(missionId)) {
+  if (progress.completedChapters.includes(chapterId)) {
     return res.json({
-      message: "Mission already completed",
+      message: "Chapter already completed",
     });
   }
 
-  if (code !== mission.code) {
+  if (code !== chapter.code) {
     return res.status(401).json({
-      message: "Incorrect mission code",
+      message: "Hmm... that's not it",
     });
   }
 
-  progress.completedMissions.push(missionId);
+  progress.completedChapters.push(chapterId);
 
   saveProgress(progress);
 
   return res.json({
-    message: "Mission completed",
-    missionId,
+    message: "Chapter completed",
+    chapterId,
   });
 });
 

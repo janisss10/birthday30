@@ -13,8 +13,8 @@ const BottomNavigation = () => {
   const location = useLocation();
 
   const getValue = () => {
-    if (location.pathname.startsWith("/missions")) {
-      return "/missions";
+    if (location.pathname.startsWith("/chapters")) {
+      return "/chapters";
     }
 
     if (location.pathname.startsWith("/memories")) {
@@ -46,8 +46,8 @@ const BottomNavigation = () => {
         />
 
         <BottomNavigationAction
-          label="Missions"
-          value="/missions"
+          label="Chapters"
+          value="/chapters"
           icon={<FlagOutlinedIcon />}
         />
 

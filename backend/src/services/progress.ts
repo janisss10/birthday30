@@ -2,13 +2,13 @@ import fs from "fs";
 import path from "path";
 
 type ProgressData = {
-  completedMissions: string[];
+  completedChapters: string[];
 };
 
 const progressFilePath = path.join(process.cwd(), "data", "progress.json");
 
 const defaultProgress: ProgressData = {
-  completedMissions: [],
+  completedChapters: [],
 };
 
 const ensureProgressFile = () => {

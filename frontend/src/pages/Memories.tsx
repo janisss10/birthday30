@@ -706,7 +706,7 @@ const Memories = () => {
             sx={{
               width: "100%",
               maxWidth: 650,
-              minHeight: "65vh",
+              height: "65vh",
               maxHeight: "calc(100vh - 56px)",
 
               backgroundColor: "#F5F3EE",
@@ -981,7 +981,7 @@ const Memories = () => {
                 sx={{
                   minHeight: 48,
 
-                  borderRadius: 0,
+                  borderRadius: 2,
 
                   backgroundColor: "#171717",
                   color: "#F5F3EE",

@@ -1,11 +1,13 @@
-export type MissionStatus = "locked" | "available" | "completed";
+export type ChaptersStatus = "locked" | "available" | "completed";
 
-export type Mission = {
+export type Chapter = {
   id: string;
   number: number;
   title: string;
   description: string;
-  status: MissionStatus;
+  status: ChaptersStatus;
+  nextLocation?: string;
+  nextLocationDetails?: string;
 };
 
 export type Memory = {

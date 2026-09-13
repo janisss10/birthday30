@@ -243,7 +243,7 @@ const Login = () => {
                 maxWidth: 360,
 
                 "& .MuiOutlinedInput-root": {
-                  borderRadius: 0,
+                  borderRadius: 2,
                   backgroundColor: "#FFFFFF",
 
                   "& fieldset": {
@@ -286,7 +286,7 @@ const Login = () => {
                 mt: 1,
                 backgroundColor: "#171717",
                 color: "#fff",
-                borderRadius: 0,
+                borderRadius: 2,
                 px: 4,
                 py: 1.7,
                 fontSize: "0.7rem",
