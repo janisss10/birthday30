@@ -155,7 +155,7 @@ const Memories = () => {
 
     // Creating new memory
     const newMemory: Memory = {
-      id: crypto.randomUUID(),
+      id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
       memoryTime: today.toISOString(),
       createdAt: new Date().toISOString(),
       caption: caption.trim(),
@@ -388,7 +388,7 @@ const Memories = () => {
           </MotionStack>
         ) : (
           /* Memory timeline */
-          <Stack spacing={5}>
+          <Stack spacing={5} sx={{ pt: 3 }}>
             {sortedMemories.map((memory, index) => {
               const photoCount = memory.photos.length;
 
@@ -789,176 +789,188 @@ const Memories = () => {
               </Typography>
             </Box>
 
-            {/* Photo Area */}
+            {/* Scrollable form content */}
             <Box
               sx={{
-                flexShrink: 0,
+                flex: 1,
+                minHeight: 0,
+                overflowY: "auto",
+                pr: 0.5,
+                pb: 2,
+
+                "&::-webkit-scrollbar": {
+                  width: 4,
+                },
+
+                "&::-webkit-scrollbar-thumb": {
+                  backgroundColor: "#D8D5CF",
+                  borderRadius: 10,
+                },
+
+                scrollbarWidth: "thin",
               }}
             >
-              <Stack spacing={1.5}>
-                {/* Photo picker */}
-                <Button
-                  component="label"
-                  variant="outlined"
-                  startIcon={<AddPhotoAlternateOutlinedIcon />}
-                  sx={{
-                    minHeight: selectedPhotos.length > 0 ? 40 : 200,
-
-                    borderColor: "#D8D5CF",
-                    color: "#171717",
-                    borderRadius: 0,
-                    textTransform: "none",
-                    fontSize: "0.85rem",
-                    fontWeight: 700,
-
-                    "&:hover": {
-                      borderColor: "#171717",
-                      backgroundColor: "rgba(0,0,0,0.02)",
-                    },
-                  }}
-                >
-                  {selectedPhotos.length > 0 ? "Add more photos" : "Add photos"}
-
-                  <input
-                    type="file"
-                    hidden
-                    accept="image/*"
-                    multiple
-                    onChange={handlePhotoChange}
-                  />
-                </Button>
-
-                {/* Photo previews - Independent Scroll */}
-                {selectedPhotos.length > 0 && (
-                  <Box
-                    sx={{
-                      maxHeight: 190,
-                      overflowY: "auto",
-
-                      pr: 0.5,
-
-                      "&::-webkit-scrollbar": {
-                        width: 4,
-                      },
-
-                      "&::-webkit-scrollbar-thumb": {
-                        backgroundColor: "#D8D5CF",
-                        borderRadius: 10,
-                      },
-
-                      scrollbarWidth: "thin",
-                    }}
-                  >
-                    <Box
+              <Stack spacing={2.5}>
+                {/* Photo Area */}
+                <Box>
+                  <Stack spacing={1.5}>
+                    {/* Photo picker */}
+                    <Button
+                      component="label"
+                      variant="outlined"
+                      startIcon={<AddPhotoAlternateOutlinedIcon />}
                       sx={{
-                        display: "grid",
-                        gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
-                        gap: 1,
+                        minHeight: selectedPhotos.length > 0 ? 40 : 200,
+
+                        borderColor: "#D8D5CF",
+                        color: "#171717",
+                        borderRadius: 0,
+                        textTransform: "none",
+                        fontSize: "0.85rem",
+                        fontWeight: 700,
+
+                        "&:hover": {
+                          borderColor: "#171717",
+                          backgroundColor: "rgba(0,0,0,0.02)",
+                        },
                       }}
                     >
-                      {selectedPhotos.map((photo, index) => (
+                      {selectedPhotos.length > 0
+                        ? "Add more photos"
+                        : "Add photos"}
+
+                      <input
+                        type="file"
+                        hidden
+                        accept="image/*"
+                        multiple
+                        onChange={handlePhotoChange}
+                      />
+                    </Button>
+
+                    {/* Photo previews */}
+                    {selectedPhotos.length > 0 && (
+                      <Box
+                        sx={{
+                          maxHeight: 190,
+                          overflowY: "auto",
+
+                          pr: 0.5,
+
+                          "&::-webkit-scrollbar": {
+                            width: 4,
+                          },
+
+                          "&::-webkit-scrollbar-thumb": {
+                            backgroundColor: "#D8D5CF",
+                            borderRadius: 10,
+                          },
+
+                          scrollbarWidth: "thin",
+                        }}
+                      >
                         <Box
-                          key={`${photo}-${index}`}
                           sx={{
-                            position: "relative",
-                            aspectRatio: "1 / 1",
-                            overflow: "hidden",
-                            backgroundColor: "#E8E5DE",
+                            display: "grid",
+                            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                            gap: 1,
                           }}
                         >
-                          <Box
-                            component="img"
-                            src={photo}
-                            alt=""
-                            sx={{
-                              width: "100%",
-                              height: "100%",
-                              objectFit: "cover",
-                              display: "block",
-                            }}
-                          />
-
-                          <IconButton
-                            onClick={() => removePhoto(index)}
-                            size="small"
-                            sx={{
-                              position: "absolute",
-                              top: 5,
-                              right: 5,
-                              width: 26,
-                              height: 26,
-
-                              backgroundColor: "rgba(245, 243, 238, 0.9)",
-
-                              color: "#171717",
-
-                              "&:hover": {
-                                backgroundColor: "#F5F3EE",
-                              },
-                            }}
-                          >
-                            <CloseIcon
+                          {selectedPhotos.map((photo, index) => (
+                            <Box
+                              key={`${photo}-${index}`}
                               sx={{
-                                fontSize: 16,
+                                position: "relative",
+                                aspectRatio: "1 / 1",
+                                overflow: "hidden",
+                                backgroundColor: "#E8E5DE",
                               }}
-                            />
-                          </IconButton>
+                            >
+                              <Box
+                                component="img"
+                                src={photo}
+                                alt=""
+                                sx={{
+                                  width: "100%",
+                                  height: "100%",
+                                  objectFit: "cover",
+                                  display: "block",
+                                }}
+                              />
+
+                              <IconButton
+                                onClick={() => removePhoto(index)}
+                                size="small"
+                                sx={{
+                                  position: "absolute",
+                                  top: 5,
+                                  right: 5,
+                                  width: 26,
+                                  height: 26,
+
+                                  backgroundColor: "rgba(245, 243, 238, 0.9)",
+
+                                  color: "#171717",
+
+                                  "&:hover": {
+                                    backgroundColor: "#F5F3EE",
+                                  },
+                                }}
+                              >
+                                <CloseIcon
+                                  sx={{
+                                    fontSize: 16,
+                                  }}
+                                />
+                              </IconButton>
+                            </Box>
+                          ))}
                         </Box>
-                      ))}
-                    </Box>
-                  </Box>
-                )}
-              </Stack>
-            </Box>
+                      </Box>
+                    )}
+                  </Stack>
+                </Box>
 
-            {/* Details Area */}
-            <Box
-              sx={{
-                flex: "1 1 0",
-                minHeight: 0,
+                {/* Details Area */}
+                <Stack spacing={2}>
+                  {/* Time */}
+                  <TextField
+                    label="Time"
+                    type="time"
+                    fullWidth
+                    value={memoryTime}
+                    onChange={(event) => setMemoryTime(event.target.value)}
+                    slotProps={{
+                      inputLabel: {
+                        shrink: true,
+                      },
+                    }}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: 0,
+                        backgroundColor: "#FFFFFF",
+                      },
+                    }}
+                  />
 
-                mt: 2,
-                pr: 0.5,
-              }}
-            >
-              <Stack spacing={2}>
-                {/* Time */}
-                <TextField
-                  label="Time"
-                  type="time"
-                  fullWidth
-                  value={memoryTime}
-                  onChange={(event) => setMemoryTime(event.target.value)}
-                  slotProps={{
-                    inputLabel: {
-                      shrink: true,
-                    },
-                  }}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: 0,
-                      backgroundColor: "#FFFFFF",
-                    },
-                  }}
-                />
-
-                {/* Caption */}
-                <TextField
-                  label="Caption (optional)"
-                  placeholder="What happened? What were we doing?"
-                  multiline
-                  minRows={2}
-                  maxRows={3}
-                  fullWidth
-                  value={caption}
-                  onChange={(event) => setCaption(event.target.value)}
-                  sx={{
-                    "& .MuiOutlinedInput-root": {
-                      borderRadius: 0,
-                      backgroundColor: "#FFFFFF",
-                    },
-                  }}
-                />
+                  {/* Caption */}
+                  <TextField
+                    label="Caption (optional)"
+                    placeholder="What happened? What were we doing?"
+                    multiline
+                    minRows={2}
+                    maxRows={3}
+                    fullWidth
+                    value={caption}
+                    onChange={(event) => setCaption(event.target.value)}
+                    sx={{
+                      "& .MuiOutlinedInput-root": {
+                        borderRadius: 0,
+                        backgroundColor: "#FFFFFF",
+                      },
+                    }}
+                  />
+                </Stack>
               </Stack>
             </Box>
 

@@ -8,6 +8,7 @@ const MainLayout = () => {
       sx={{
         minHeight: "100vh",
         pb: 8,
+        backgroundColor: "#F5F3EE",
       }}
     >
       <Outlet />

@@ -420,7 +420,6 @@ const ChapterDetails = () => {
                     }}
                     placeholder="Secret code"
                     fullWidth
-                    autoFocus
                     error={Boolean(error)}
                     helperText={error || undefined}
                     slotProps={{

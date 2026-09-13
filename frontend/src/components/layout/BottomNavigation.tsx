@@ -4,7 +4,7 @@ import {
   Paper,
 } from "@mui/material";
 import HomeOutlinedIcon from "@mui/icons-material/HomeOutlined";
-import FlagOutlinedIcon from "@mui/icons-material/FlagOutlined";
+import RouteOutlinedIcon from "@mui/icons-material/RouteOutlined";
 import MenuBookOutlinedIcon from "@mui/icons-material/MenuBookOutlined";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -32,12 +32,16 @@ const BottomNavigation = () => {
         left: 0,
         right: 0,
         zIndex: 1000,
+        borderTop: "1px solid #D8D5CF",
       }}
-      elevation={8}
+      elevation={2}
     >
       <MuiBottomNavigation
         value={getValue()}
         onChange={(_, newValue) => navigate(newValue)}
+        sx={{
+          backgroundColor: "#F5F3EE",
+        }}
       >
         <BottomNavigationAction
           label="Home"
@@ -48,7 +52,7 @@ const BottomNavigation = () => {
         <BottomNavigationAction
           label="Chapters"
           value="/chapters"
-          icon={<FlagOutlinedIcon />}
+          icon={<RouteOutlinedIcon />}
         />
 
         <BottomNavigationAction

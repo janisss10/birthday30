@@ -232,7 +232,7 @@ const Home = () => {
           {/* Floating sparkles */}
           <Box
             sx={{
-              height: 70,
+              height: 30,
               position: "relative",
               width: "100%",
             }}

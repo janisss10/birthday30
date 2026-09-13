@@ -11,7 +11,7 @@ import { getChapters } from "../services/chapters";
 const MotionStack = motion.create(Stack);
 const MotionBox = motion.create(Box);
 
-const chapters = () => {
+const Chapters = () => {
   const navigate = useNavigate();
 
   const [chapters, setChapters] = useState<Chapter[]>([]);
@@ -434,4 +434,4 @@ const chapters = () => {
   );
 };
 
-export default chapters;
+export default Chapters;
