@@ -5,6 +5,7 @@ import jwt from "jsonwebtoken";
 import { authenticateToken } from "./middleware/authMiddleware";
 import { chapters } from "./data/chapters";
 import { getProgress, saveProgress } from "./services/progress";
+import { getMemories, saveMemories, type Memory } from "./services/memories";
 
 dotenv.config();
 
@@ -37,13 +38,9 @@ app.post("/api/auth/login", (req, res) => {
   }
 
   const token = jwt.sign(
-    {
-      authenticated: true,
-    },
+    { authenticated: true },
     process.env.JWT_SECRET as string,
-    {
-      expiresIn: "7d",
-    },
+    { expiresIn: "7d" },
   );
 
   return res.json({
@@ -53,9 +50,7 @@ app.post("/api/auth/login", (req, res) => {
 });
 
 app.get("/api/auth/me", authenticateToken, (_req, res) => {
-  res.json({
-    authenticated: true,
-  });
+  res.json({ authenticated: true });
 });
 
 app.get("/api/chapters", authenticateToken, (_req, res) => {
@@ -120,18 +115,48 @@ app.post("/api/chapters/:chapterId/unlock", authenticateToken, (req, res) => {
 
   if (code !== chapter.code) {
     return res.status(401).json({
-      message: "Hmm... that's not it",
+      message: "Incorrect chapter code",
     });
   }
 
   progress.completedChapters.push(chapterId);
-
   saveProgress(progress);
 
   return res.json({
     message: "Chapter completed",
     chapterId,
   });
+});
+
+app.get("/api/memories", authenticateToken, (_req, res) => {
+  const memories = getMemories();
+
+  return res.json(memories);
+});
+
+app.post("/api/memories", authenticateToken, (req, res) => {
+  const { memoryTime, createdAt, caption, photos } = req.body;
+
+  if (!memoryTime || !createdAt || !Array.isArray(photos)) {
+    return res.status(400).json({
+      message: "Invalid memory data",
+    });
+  }
+
+  const memories = getMemories();
+
+  const newMemory: Memory = {
+    id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+    memoryTime,
+    createdAt,
+    caption: caption?.trim() ?? "",
+    photos,
+  };
+
+  memories.push(newMemory);
+  saveMemories(memories);
+
+  return res.status(201).json(newMemory);
 });
 
 app.listen(PORT, () => {

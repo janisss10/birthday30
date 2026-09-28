@@ -11,10 +11,11 @@ import {
   Typography,
 } from "@mui/material";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
-import { memories as initialMemories } from "../data/memories";
+import { uploadImage } from "../services/cloudinary";
+import { createMemory, getMemories } from "../services/memories";
 import type { Memory } from "../types/birthday";
 import { motion } from "motion/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MemoryItem from "../components/memories/MemoryItem";
 import MemoryForm from "../components/memories/MemoryForm";
 
@@ -25,10 +26,12 @@ const Memories = () => {
   const [showAddMemory, setShowAddMemory] = useState(false);
 
   // Memories displayed on the page
-  const [memoryList, setMemoryList] = useState<Memory[]>(initialMemories);
+  const [memoryList, setMemoryList] = useState<Memory[]>([]);
 
   // New memory form
   const [selectedPhotos, setSelectedPhotos] = useState<string[]>([]);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+
   const [memoryTime, setMemoryTime] = useState("");
   const [caption, setCaption] = useState("");
 
@@ -85,10 +88,9 @@ const Memories = () => {
 
     if (!files) return;
 
-    const newPhotoUrls = Array.from(files).map((file) =>
-      URL.createObjectURL(file),
-    );
-
+    const newFiles = Array.from(files);
+    const newPhotoUrls = newFiles.map((file) => URL.createObjectURL(file));
+    setSelectedFiles((currentFiles) => [...currentFiles, ...newFiles]);
     setSelectedPhotos((currentPhotos) => [...currentPhotos, ...newPhotoUrls]);
 
     event.target.value = "";
@@ -102,6 +104,7 @@ const Memories = () => {
 
   const resetForm = () => {
     setSelectedPhotos([]);
+    setSelectedFiles([]);
     setMemoryTime("");
     setCaption("");
   };
@@ -112,8 +115,8 @@ const Memories = () => {
     resetForm();
   };
 
-  const handleSaveMemory = () => {
-    if (!memoryTime || selectedPhotos.length === 0) return;
+  const handleSaveMemory = async () => {
+    if (!memoryTime || selectedFiles.length === 0) return;
 
     const today = new Date();
 
@@ -125,34 +128,28 @@ const Memories = () => {
     today.setMilliseconds(0);
 
     if (editingMemoryId) {
-      setMemoryList((currentMemories) =>
-        currentMemories.map((memory) =>
-          memory.id === editingMemoryId
-            ? {
-                ...memory,
-                memoryTime: today.toISOString(),
-                caption: caption.trim(),
-                photos: selectedPhotos,
-              }
-            : memory,
-        ),
-      );
-
-      closeAddMemory();
+      // leave this part alone for now
       return;
     }
 
-    const newMemory: Memory = {
-      id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-      memoryTime: today.toISOString(),
-      createdAt: new Date().toISOString(),
-      caption: caption.trim(),
-      photos: selectedPhotos,
-    };
+    try {
+      const uploadedPhotoUrls = await Promise.all(
+        selectedFiles.map((file) => uploadImage(file)),
+      );
 
-    setMemoryList((currentMemories) => [...currentMemories, newMemory]);
+      const newMemory = await createMemory({
+        memoryTime: today.toISOString(),
+        createdAt: new Date().toISOString(),
+        caption: caption.trim(),
+        photos: uploadedPhotoUrls,
+      });
 
-    closeAddMemory();
+      setMemoryList((currentMemories) => [...currentMemories, newMemory]);
+
+      closeAddMemory();
+    } catch (error) {
+      console.error("Failed to save memory:", error);
+    }
   };
 
   const openDeleteConfirm = (memoryId: string) => {
@@ -172,6 +169,19 @@ const Memories = () => {
 
     setMemoryToDelete(null);
   };
+
+  useEffect(() => {
+    const loadMemories = async () => {
+      try {
+        const memories = await getMemories();
+        setMemoryList(memories);
+      } catch (error) {
+        console.error("Failed to load memories:", error);
+      }
+    };
+
+    loadMemories();
+  }, []);
 
   return (
     <Box
