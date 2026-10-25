@@ -15,8 +15,6 @@ export const getProgress = async (): Promise<ProgressData> => {
     .eq("id", "main")
     .maybeSingle();
 
-  console.log("Progress fetched from Supabase:", data);
-
   if (error) {
     throw new Error(`Failed to fetch chapter progress: ${error.message}`);
   }
