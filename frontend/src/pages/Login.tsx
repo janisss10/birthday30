@@ -11,6 +11,7 @@ import {
 import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import { useNavigate } from "react-router-dom";
 import { motion } from "motion/react";
+import { apiFetch } from "../utils/api";
 
 const MotionStack = motion.create(Stack);
 const MotionBox = motion.create(Box);
@@ -24,7 +25,7 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await fetch("http://localhost:3000/api/auth/login", {
+      const response = await apiFetch("/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
