@@ -1,5 +1,3 @@
-import { apiFetch } from "./api";
-
 const TOKEN_KEY = "birthday30_token";
 
 export const getToken = () => {

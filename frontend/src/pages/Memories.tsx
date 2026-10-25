@@ -66,14 +66,6 @@ const Memories = () => {
     ).padStart(2, "0")}`;
   };
 
-  const getMemoryTime = (memoryTime: string) => {
-    const date = new Date(memoryTime);
-
-    return `${String(date.getHours()).padStart(2, "0")}:${String(
-      date.getMinutes(),
-    ).padStart(2, "0")}`;
-  };
-
   const openAddMemory = () => {
     setEditingMemoryId(null);
     setMemoryTime(getCurrentTime());

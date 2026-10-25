@@ -1,59 +1,48 @@
-import fs from "fs";
-import path from "path";
+import { supabase } from "../supabase";
 
-type ProgressData = {
+export type ProgressData = {
   completedChapters: string[];
 };
-
-const progressFilePath = path.join(process.cwd(), "data", "progress.json");
 
 const defaultProgress: ProgressData = {
   completedChapters: [],
 };
 
-const ensureProgressFile = () => {
-  const dataDirectory = path.dirname(progressFilePath);
+export const getProgress = async (): Promise<ProgressData> => {
+  const { data, error } = await supabase
+    .from("chapter_progress")
+    .select("completed_chapters")
+    .eq("id", "main")
+    .maybeSingle();
 
-  if (!fs.existsSync(dataDirectory)) {
-    fs.mkdirSync(dataDirectory, {
-      recursive: true,
-    });
+  if (error) {
+    throw new Error(`Failed to fetch chapter progress: ${error.message}`);
   }
 
-  if (!fs.existsSync(progressFilePath)) {
-    fs.writeFileSync(
-      progressFilePath,
-      JSON.stringify(defaultProgress, null, 2),
-    );
-  }
-};
-
-export const getProgress = (): ProgressData => {
-  ensureProgressFile();
-
-  const file = fs.readFileSync(progressFilePath, "utf-8");
-  const parsed: unknown = JSON.parse(file);
-
-  if (
-    typeof parsed === "object" &&
-    parsed !== null &&
-    "completedChapters" in parsed &&
-    Array.isArray(parsed.completedChapters) &&
-    parsed.completedChapters.every((chapterId) => typeof chapterId === "string")
-  ) {
-    return {
-      completedChapters: parsed.completedChapters,
-    };
+  if (!data) {
+    return { ...defaultProgress };
   }
 
-  // Fall back safely if the saved structure is invalid
   return {
-    completedChapters: [],
+    completedChapters: Array.isArray(data.completed_chapters)
+      ? data.completed_chapters.filter(
+          (chapterId): chapterId is string => typeof chapterId === "string",
+        )
+      : [],
   };
 };
 
-export const saveProgress = (progress: ProgressData) => {
-  ensureProgressFile();
+export const saveProgress = async (progress: ProgressData): Promise<void> => {
+  const { error } = await supabase.from("chapter_progress").upsert(
+    {
+      id: "main",
+      completed_chapters: progress.completedChapters,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "id" },
+  );
 
-  fs.writeFileSync(progressFilePath, JSON.stringify(progress, null, 2));
+  if (error) {
+    throw new Error(`Failed to save chapter progress: ${error.message}`);
+  }
 };
