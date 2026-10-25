@@ -22,7 +22,9 @@ export const getProgress = async (): Promise<ProgressData> => {
   }
 
   if (!data) {
-    return { ...defaultProgress };
+    return {
+      completedChapters: [],
+    };
   }
 
   return {
