@@ -23,6 +23,7 @@ const ChapterDetails = () => {
 
   const [chapter, setChapter] = useState<Chapter | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isUnlocking, setIsUnlocking] = useState(false);
   const [code, setCode] = useState("");
   const [showCodeInput, setShowCodeInput] = useState(false);
   const [error, setError] = useState("");
@@ -51,11 +52,12 @@ const ChapterDetails = () => {
   }, [chapterId]);
 
   const handleUnlock = async () => {
-    if (!chapterId || !code.trim()) {
+    if (!chapterId || !code.trim() || isUnlocking) {
       return;
     }
 
     setError("");
+    setIsUnlocking(true);
 
     try {
       await unlockChapter(chapterId, code.trim());
@@ -64,7 +66,6 @@ const ChapterDetails = () => {
       setShowCodeInput(false);
 
       const chapters = await getChapters();
-
       const updatedChapter = chapters.find((item) => item.id === chapterId);
 
       if (updatedChapter) {
@@ -81,6 +82,8 @@ const ChapterDetails = () => {
       setError(
         err instanceof Error ? err.message : "Unable to complete chapter.",
       );
+    } finally {
+      setIsUnlocking(false);
     }
   };
 
@@ -159,9 +162,71 @@ const ChapterDetails = () => {
     );
   }
 
+  const isLocked = chapter.status === "locked";
   const isCompleted = chapter.status === "completed";
   const showStartingLocation = chapter.number === 1 && !isCompleted;
   const showNextLocation = isCompleted && Boolean(chapter.nextLocation);
+
+  if (isLocked) {
+    return (
+      <Box
+        sx={{
+          minHeight: "100vh",
+          backgroundColor: "#F5F3EE",
+          color: "#171717",
+          px: 3,
+          py: 6,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <Stack spacing={2} sx={{ width: "100%", maxWidth: 500 }}>
+          <Typography
+            sx={{
+              fontSize: "0.7rem",
+              fontWeight: 600,
+              letterSpacing: "0.16em",
+              color: "#777",
+              textTransform: "uppercase",
+            }}
+          >
+            CHAPTER {String(chapter.number).padStart(2, "0")}
+          </Typography>
+
+          <Typography
+            component="h1"
+            sx={{
+              fontSize: "2.5rem",
+              fontWeight: 500,
+              letterSpacing: "-0.045em",
+            }}
+          >
+            Not just yet.
+          </Typography>
+
+          <Typography sx={{ color: "#666", lineHeight: 1.7 }}>
+            This chapter is still locked. Complete the previous chapter first.
+            No skipping ahead.
+          </Typography>
+
+          <Button
+            variant="text"
+            startIcon={<ArrowBackIcon />}
+            onClick={() => navigate("/chapters")}
+            sx={{
+              alignSelf: "flex-start",
+              color: "#171717",
+              px: 0,
+              textTransform: "none",
+            }}
+          >
+            Back to chapters
+          </Button>
+        </Stack>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -445,7 +510,7 @@ const ChapterDetails = () => {
                     <Button
                       variant="contained"
                       onClick={handleUnlock}
-                      disabled={!code.trim()}
+                      disabled={!code.trim() || isUnlocking}
                       sx={{
                         backgroundColor: "#171717",
                         color: "#F5F3EE",
@@ -459,7 +524,7 @@ const ChapterDetails = () => {
                         },
                       }}
                     >
-                      Unlock Chapter
+                      {isUnlocking ? "Unlocking..." : "Unlock Chapter"}
                     </Button>
 
                     <Button
