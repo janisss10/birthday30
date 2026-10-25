@@ -12,7 +12,12 @@ import {
 } from "@mui/material";
 import AddPhotoAlternateOutlinedIcon from "@mui/icons-material/AddPhotoAlternateOutlined";
 import { uploadImage } from "../services/cloudinary";
-import { createMemory, getMemories } from "../services/memories";
+import {
+  createMemory,
+  deleteMemory,
+  getMemories,
+  updateMemory,
+} from "../services/memories";
 import type { Memory } from "../types/birthday";
 import { motion } from "motion/react";
 import { useEffect, useState } from "react";
@@ -78,7 +83,14 @@ const Memories = () => {
   const openEditMemory = (memory: Memory) => {
     setEditingMemoryId(memory.id);
     setSelectedPhotos(memory.photos);
-    setMemoryTime(getMemoryTime(memory.memoryTime));
+    setSelectedFiles([]);
+    setMemoryTime(
+      new Date(memory.memoryTime).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }),
+    );
     setCaption(memory.caption ?? "");
     setShowAddMemory(true);
   };
@@ -116,7 +128,7 @@ const Memories = () => {
   };
 
   const handleSaveMemory = async () => {
-    if (!memoryTime || selectedFiles.length === 0) return;
+    if (!memoryTime || selectedPhotos.length === 0) return;
 
     const today = new Date();
 
@@ -128,7 +140,32 @@ const Memories = () => {
     today.setMilliseconds(0);
 
     if (editingMemoryId) {
-      // leave this part alone for now
+      try {
+        const uploadedPhotoUrls = await Promise.all(
+          selectedFiles.map((file) => uploadImage(file)),
+        );
+
+        const existingPhotoUrls = selectedPhotos.filter(
+          (photo) => !photo.startsWith("blob:"),
+        );
+
+        const updatedMemory = await updateMemory(editingMemoryId, {
+          memoryTime: today.toISOString(),
+          caption: caption.trim(),
+          photos: [...existingPhotoUrls, ...uploadedPhotoUrls],
+        });
+
+        setMemoryList((currentMemories) =>
+          currentMemories.map((memory) =>
+            memory.id === editingMemoryId ? updatedMemory : memory,
+          ),
+        );
+
+        closeAddMemory();
+      } catch (error) {
+        console.error("Failed to update memory:", error);
+      }
+
       return;
     }
 
@@ -160,14 +197,21 @@ const Memories = () => {
     setMemoryToDelete(null);
   };
 
-  const handleDeleteMemory = () => {
-    if (!memoryToDelete) return;
+  const handleDeleteMemory = async (memoryId: string) => {
+    try {
+      // Delete the memory from the backend first
+      await deleteMemory(memoryId);
 
-    setMemoryList((currentMemories) =>
-      currentMemories.filter((memory) => memory.id !== memoryToDelete),
-    );
+      // Remove it from the displayed list after deletion succeeds
+      setMemoryList((currentMemories) =>
+        currentMemories.filter((memory) => memory.id !== memoryId),
+      );
 
-    setMemoryToDelete(null);
+      // Close the delete confirmation dialog
+      setMemoryToDelete(null);
+    } catch (error) {
+      console.error("Failed to delete memory:", error);
+    }
   };
 
   useEffect(() => {
@@ -517,7 +561,11 @@ const Memories = () => {
           </Button>
 
           <Button
-            onClick={handleDeleteMemory}
+            onClick={() => {
+              if (memoryToDelete) {
+                handleDeleteMemory(memoryToDelete);
+              }
+            }}
             sx={{
               color: "#171717",
               textTransform: "none",

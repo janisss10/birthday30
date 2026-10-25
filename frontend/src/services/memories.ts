@@ -34,3 +34,31 @@ export const createMemory = async (
 
   return response.json();
 };
+
+export const updateMemory = async (
+  memoryId: string,
+  memory: Omit<Memory, "id" | "createdAt">,
+): Promise<Memory> => {
+  const response = await fetch(`${API_URL}/api/memories/${memoryId}`, {
+    method: "PUT",
+    headers: getAuthHeaders(),
+    body: JSON.stringify(memory),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to update memory");
+  }
+
+  return response.json();
+};
+
+export const deleteMemory = async (memoryId: string): Promise<void> => {
+  const response = await fetch(`${API_URL}/api/memories/${memoryId}`, {
+    method: "DELETE",
+    headers: getAuthHeaders(),
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to delete memory");
+  }
+};
