@@ -74,6 +74,12 @@ app.get("/api/chapters", authenticateToken, async (_req, res) => {
   try {
     const progress = await getProgress();
 
+    console.log("DEBUG chapter progress:", progress);
+    console.log(
+      "DEBUG chapter IDs:",
+      chapters.map((chapter) => chapter.id),
+    );
+
     const chapterProgress = chapters.map((chapter, index) => {
       const completed = progress.completedChapters.includes(chapter.id);
 
