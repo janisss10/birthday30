@@ -349,7 +349,7 @@ const ChapterDetails = () => {
                   }}
                 >
                   {showStartingLocation
-                    ? "A cafe (put location instead)"
+                    ? "A Caffeine Fix"
                     : chapter.nextLocation}
                 </Typography>
 
@@ -362,7 +362,7 @@ const ChapterDetails = () => {
                   }}
                 >
                   {showStartingLocation
-                    ? "First things first, we need fuel for the day."
+                    ? "Let's get you properly caffeinated first."
                     : chapter.nextLocationDetails}
                 </Typography>
               </Stack>
