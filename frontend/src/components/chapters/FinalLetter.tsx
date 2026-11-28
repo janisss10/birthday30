@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { Box, Button, Stack, Typography } from "@mui/material";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 export default function FinalLetter() {
   const [isOpen, setIsOpen] = useState(false);
@@ -43,6 +44,7 @@ export default function FinalLetter() {
             width: "min(100%, 380px)",
             height: 190,
             perspective: 1000,
+            mx: "auto",
           }}
         >
           {/* Envelope body */}
@@ -163,6 +165,7 @@ export default function FinalLetter() {
               style={{
                 width: "100%",
                 maxWidth: 580,
+                margin: "0 auto",
                 overflow: "hidden",
                 position: "relative",
                 zIndex: 1,
@@ -213,8 +216,8 @@ export default function FinalLetter() {
                     I wanted to make your 30th birthday a little different. Not
                     just another birthday, another cake, or another year older.
                     I wanted to put together a day filled with little things,
-                    new experiences, and moments that we'd hopefully look back
-                    on and smile about.
+                    new experiences, and memories that we can look back on
+                    someday.
                   </Typography>
 
                   <Typography
@@ -224,11 +227,10 @@ export default function FinalLetter() {
                       lineHeight: 1.9,
                     }}
                   >
-                    Thank you for being you. For the laughs, the silly moments,
-                    the patience, and all the little things you do that probably
-                    go unnoticed but never go unappreciated. Life is a lot more
-                    fun with you in it, and I'm really glad I get to do it
-                    alongside you.
+                    I know I can be a little extra when it comes to planning
+                    things, but I guess that's just my way of showing how much I
+                    love you. And honestly, seeing you enjoy something I've put
+                    together makes all the effort worth it.
                   </Typography>
 
                   <Typography
@@ -238,25 +240,76 @@ export default function FinalLetter() {
                       lineHeight: 1.9,
                     }}
                   >
-                    Now that you're officially 30 (yes, I'm still going to
-                    remind you), I hope this next chapter brings you more
-                    reasons to laugh, more things to look forward to, and plenty
-                    of opportunities to do the things you've always wanted to
-                    do. I hope today gave you a few memories worth keeping. And
-                    more than anything, I hope you know how loved you are, today
-                    and on all the ordinary days in between.
+                    One of the things I appreciate most about you is the way you
+                    treat me. The way you care for me, make me feel loved, and
+                    make even the ordinary days feel a little better. It's in
+                    the little things you do, sometimes without even realising
+                    it. I hope you know that I notice them, and I never take
+                    them for granted.
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      color: "#444",
+                      fontSize: "0.95rem",
+                      lineHeight: 1.9,
+                    }}
+                  >
+                    Now that you're officially 30, I hope this next chapter
+                    brings you all the happiness, opportunities and success you
+                    deserve. I hope you get to achieve the things you've been
+                    working towards, chase the things you've always wanted, and
+                    enjoy everything life has in store for you.
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      color: "#444",
+                      fontSize: "0.95rem",
+                      lineHeight: 1.9,
+                    }}
+                  >
+                    And, on a slightly more important note, I hope you earn BIG
+                    BIG money so I can retire early. Please consider this a
+                    long-term investment in our future. No pressure, of course.
+                    🤭
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      color: "#444",
+                      fontSize: "0.95rem",
+                      lineHeight: 1.9,
+                    }}
+                  >
+                    Jokes aside, I'm really grateful that I get to do life with
+                    you. Here's to more adventures, more ridiculous inside
+                    jokes, more little moments, and many more birthdays
+                    together.
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      color: "#444",
+                      fontSize: "0.95rem",
+                      lineHeight: 1.9,
+                    }}
+                  >
+                    Happy 30th, love. I hope you had as much fun today as I had
+                    planning it for you.
                   </Typography>
                 </Stack>
 
+                {/* Sign-off */}
                 <Box sx={{ mt: 5 }}>
                   <Typography
                     sx={{
                       color: "#666",
                       fontSize: "0.9rem",
-                      mb: 1,
+                      mb: 0.5,
                     }}
                   >
-                    All my love,
+                    Yours, always,
                   </Typography>
 
                   <Typography
@@ -267,8 +320,42 @@ export default function FinalLetter() {
                       color: "#171717",
                     }}
                   >
-                    Yours, always.
+                    Janis
                   </Typography>
+                </Box>
+
+                <Box
+                  sx={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    mt: 3,
+                  }}
+                >
+                  <Stack direction="row" spacing={0.6}>
+                    <Typography
+                      sx={{
+                        fontFamily: "Cormorant Garamond, serif",
+                        fontSize: "1rem",
+                        color: "#514638",
+                      }}
+                    >
+                      J
+                    </Typography>
+
+                    <FavoriteIcon
+                      sx={{ fontSize: "0.85rem", color: "#B77B78" }}
+                    />
+
+                    <Typography
+                      sx={{
+                        fontFamily: "Cormorant Garamond, serif",
+                        fontSize: "1rem",
+                        color: "#514638",
+                      }}
+                    >
+                      Z
+                    </Typography>
+                  </Stack>
                 </Box>
               </Box>
             </motion.div>
@@ -284,7 +371,7 @@ export default function FinalLetter() {
             px: 2.5,
             py: 0.8,
             minWidth: "auto",
-            alignSelf: "flex-start",
+            alignSelf: "center",
             borderRadius: "999px",
             backgroundColor: "#171717",
             color: "#fff",
