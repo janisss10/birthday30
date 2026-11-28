@@ -2,6 +2,7 @@ import { Stack, Typography } from "@mui/material";
 import { motion } from "motion/react";
 import type { Chapter } from "../../types/birthday";
 import ChapterCard from "./ChapterCard";
+import FinalLetter from "./FinalLetter";
 
 type ChapterListProps = {
   chapters: Chapter[];
@@ -16,6 +17,10 @@ const ChapterList = ({
   error,
   onChapterClick,
 }: ChapterListProps) => {
+  const finalChapterCompleted = chapters.some(
+    (chapter) => chapter.id === "chapter-05" && chapter.status === "completed",
+  );
+
   return (
     <motion.div
       initial="hidden"
@@ -91,6 +96,8 @@ const ChapterList = ({
               onClick={() => onChapterClick(chapter.id)}
             />
           ))}
+
+        {!loading && !error && finalChapterCompleted && <FinalLetter />}
       </Stack>
     </motion.div>
   );

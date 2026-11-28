@@ -1,4 +1,4 @@
-export type ChaptersStatus = "locked" | "available" | "completed";
+type ChaptersStatus = "locked" | "available" | "completed";
 
 export type Chapter = {
   id: string;

@@ -358,7 +358,7 @@ const ChapterDetails = () => {
                     fontSize: "0.95rem",
                     lineHeight: 1.6,
                     color: "#666",
-                    maxWidth: 500,
+                    maxWidth: 600,
                   }}
                 >
                   {showStartingLocation
