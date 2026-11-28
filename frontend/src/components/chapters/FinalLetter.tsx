@@ -27,11 +27,11 @@ export default function FinalLetter() {
               color: "#171717",
             }}
           >
-            and that's a wrap.
+            Look at us.
           </Typography>
 
           <Typography sx={{ color: "#666", fontSize: "0.9rem" }}>
-            But before you go, there's one more thing.
+            Made it through the whole thing. Here's your bonus content.
           </Typography>
         </Stack>
 
@@ -210,8 +210,11 @@ export default function FinalLetter() {
                       lineHeight: 1.9,
                     }}
                   >
-                    I wanted to make this birthday a little different, something
-                    that wasn't just another day on the calendar.
+                    I wanted to make your 30th birthday a little different. Not
+                    just another birthday, another cake, or another year older.
+                    I wanted to put together a day filled with little things,
+                    new experiences, and moments that we'd hopefully look back
+                    on and smile about.
                   </Typography>
 
                   <Typography
@@ -221,7 +224,11 @@ export default function FinalLetter() {
                       lineHeight: 1.9,
                     }}
                   >
-                    test test 1 2 3
+                    Thank you for being you. For the laughs, the silly moments,
+                    the patience, and all the little things you do that probably
+                    go unnoticed but never go unappreciated. Life is a lot more
+                    fun with you in it, and I'm really glad I get to do it
+                    alongside you.
                   </Typography>
 
                   <Typography
@@ -231,7 +238,13 @@ export default function FinalLetter() {
                       lineHeight: 1.9,
                     }}
                   >
-                    testing testing 11 22 33
+                    Now that you're officially 30 (yes, I'm still going to
+                    remind you), I hope this next chapter brings you more
+                    reasons to laugh, more things to look forward to, and plenty
+                    of opportunities to do the things you've always wanted to
+                    do. I hope today gave you a few memories worth keeping. And
+                    more than anything, I hope you know how loved you are, today
+                    and on all the ordinary days in between.
                   </Typography>
                 </Stack>
 
@@ -268,12 +281,14 @@ export default function FinalLetter() {
           disableElevation
           sx={{
             mt: isOpen ? -1 : 0,
-            px: 3.5,
-            py: 1.3,
+            px: 2.5,
+            py: 0.8,
+            minWidth: "auto",
+            alignSelf: "flex-start",
             borderRadius: "999px",
             backgroundColor: "#171717",
             color: "#fff",
-            fontSize: "0.8rem",
+            fontSize: "0.75rem",
             fontWeight: 400,
             letterSpacing: "0.02em",
             textTransform: "none",
@@ -282,7 +297,7 @@ export default function FinalLetter() {
             },
           }}
         >
-          {isOpen ? "Fold the letter away" : "Open your letter"}
+          {isOpen ? "Close" : "Reveal"}
         </Button>
       </Stack>
     </Box>
