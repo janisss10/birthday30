@@ -17,7 +17,14 @@ export default function FinalLetter() {
         justifyContent: "center",
       }}
     >
-      <Stack spacing={3} sx={{ width: "100%", maxWidth: 620 }}>
+      <Stack
+        spacing={3}
+        sx={{
+          width: "100%",
+          maxWidth: 620,
+          alignItems: "center",
+        }}
+      >
         {/* Introduction */}
         <Stack spacing={1}>
           <Typography
@@ -35,7 +42,6 @@ export default function FinalLetter() {
             Made it through the whole thing. Here's your bonus content.
           </Typography>
         </Stack>
-
         {/* Envelope */}
         <Box
           sx={{
@@ -137,7 +143,6 @@ export default function FinalLetter() {
             </Box>
           )}
         </Box>
-
         {/* Letter */}
         <AnimatePresence initial={false}>
           {isOpen && (
@@ -165,14 +170,17 @@ export default function FinalLetter() {
               style={{
                 width: "100%",
                 maxWidth: 580,
-                margin: "0 auto",
+                marginInline: "auto",
                 overflow: "hidden",
                 position: "relative",
                 zIndex: 1,
+                alignSelf: "center",
               }}
             >
               <Box
                 sx={{
+                  width: "100%",
+                  boxSizing: "border-box",
                   background: "#FBF9F5",
                   border: "1px solid #E8E1D7",
                   borderRadius: "4px",
@@ -331,11 +339,12 @@ export default function FinalLetter() {
                     mt: 3,
                   }}
                 >
-                  <Stack direction="row" spacing={0.6}>
+                  <Stack direction="row" spacing={0.7} sx={{ height: 22 }}>
                     <Typography
                       sx={{
                         fontFamily: "Cormorant Garamond, serif",
-                        fontSize: "1rem",
+                        fontSize: "0.95rem",
+                        lineHeight: 1,
                         color: "#514638",
                       }}
                     >
@@ -343,13 +352,18 @@ export default function FinalLetter() {
                     </Typography>
 
                     <FavoriteIcon
-                      sx={{ fontSize: "0.85rem", color: "#B77B78" }}
+                      sx={{
+                        fontSize: "0.7rem",
+                        color: "#B77B78",
+                        transform: "translateY(1px)",
+                      }}
                     />
 
                     <Typography
                       sx={{
                         fontFamily: "Cormorant Garamond, serif",
-                        fontSize: "1rem",
+                        fontSize: "0.95rem",
+                        lineHeight: 1,
                         color: "#514638",
                       }}
                     >
